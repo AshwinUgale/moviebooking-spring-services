@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Failed</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+            text-align: center;
+        }
+        .error-message {
+            background-color: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-top: 50px;
+        }
+        .error-icon {
+            color: #dc3545;
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #dc3545;
+            margin-bottom: 20px;
+        }
+        p {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .error-details {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 30px;
+            color: #721c24;
+        }
+        .button {
+            display: inline-block;
+            background-color: #0070ba;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 4px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: #005ea6;
+        }
+    </style>
+</head>
+<body>
+    <div class="error-message">
+        <div class="error-icon">✕</div>
+        <h1>Payment Failed</h1>
+        <p>We're sorry, but there was an error processing your payment.</p>
+        <div class="error-details" id="errorDetails">
+            An error occurred during payment processing.
+        </div>
+        <a href="/" class="button">Try Again</a>
+    </div>
+
+    <script>
+        // Display the error message from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const error = urlParams.get('error');
+        if (error) {
+            document.getElementById('errorDetails').textContent = decodeURIComponent(error);
+        }
+    </script>
+</body>
+</html> 

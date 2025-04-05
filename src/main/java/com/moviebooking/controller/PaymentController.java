@@ -2,10 +2,12 @@ package com.moviebooking.controller;
 
 import com.moviebooking.model.PaymentEntity;
 import com.moviebooking.model.PaymentRequest;
+import com.moviebooking.model.PaymentVerificationRequest;
 import com.moviebooking.service.PaymentService;
 import com.paypal.api.payments.Payment;
 import com.paypal.base.rest.PayPalRESTException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
@@ -13,7 +15,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/payments")
 @RequiredArgsConstructor
@@ -36,6 +38,24 @@ public class PaymentController {
             return ResponseEntity.ok(response);
         } catch (PayPalRESTException e) {
             return ResponseEntity.badRequest().body("Error creating payment: " + e.getMessage());
+        }
+    }
+
+    @PostMapping("/verify")
+    public ResponseEntity<?> verifyPayment(@RequestBody PaymentVerificationRequest request) {
+        try {
+            Payment payment = paymentService.verifyPayment(request.getPaymentId(), request.getPayerID());
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("status", payment.getState());
+            response.put("id", payment.getId());
+            response.put("state", payment.getState());
+            return ResponseEntity.ok(response);
+        } catch (PayPalRESTException e) {
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("success", false);
+            errorResponse.put("message", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
         }
     }
 

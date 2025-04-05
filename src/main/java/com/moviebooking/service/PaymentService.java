@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -91,4 +92,43 @@ public class PaymentService {
         return paymentRepository.findById(paymentId)
                 .orElseThrow(() -> new RuntimeException("Payment not found"));
     }
+
+    public Payment verifyPayment(String paymentId, String payerId) throws PayPalRESTException {
+        // First check if payment exists in local database
+        Optional<PaymentEntity> localPayment = paymentRepository.findById(paymentId);
+        if (localPayment.isPresent() && "COMPLETED".equals(localPayment.get().getStatus())) {
+            // Payment already verified, return the payment details
+            return Payment.get(apiContext, paymentId);
+        }
+    
+        // If payment not completed and payerId provided, execute it
+        if (payerId != null) {
+            PaymentExecution paymentExecution = new PaymentExecution();
+            paymentExecution.setPayerId(payerId);
+    
+            Payment payment = new Payment();
+            payment.setId(paymentId);
+    
+            Payment executedPayment = payment.execute(apiContext, paymentExecution);
+    
+            // Normalize PayPal state to match frontend expectations
+            String state = executedPayment.getState();
+            String normalizedStatus = "approved".equalsIgnoreCase(state) ? "paid" : state;
+    
+            // Update local payment record
+            PaymentEntity paymentEntity = localPayment.orElseGet(PaymentEntity::new);
+            paymentEntity.setPaymentId(paymentId);
+            paymentEntity.setPayerId(payerId);
+            paymentEntity.setStatus(normalizedStatus);
+            paymentRepository.save(paymentEntity);
+    
+            return executedPayment;
+        }
+    
+        // If no payerId, just get payment details
+        return Payment.get(apiContext, paymentId);
+    }
+    
+
+    
 } 

@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
+import org.springframework.beans.factory.annotation.Value;
+
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,6 +24,8 @@ import java.util.Map;
 public class PaymentController {
 
     private final PaymentService paymentService;
+    @Value("${CLIENT_URL}")
+    private String clientUrl;
 
     @PostMapping("/create")
     public ResponseEntity<?> createPayment(@RequestBody PaymentRequest paymentRequest) {
@@ -60,17 +64,19 @@ public class PaymentController {
     }
 
     @GetMapping("/execute")
-    public RedirectView executePayment(@RequestParam("paymentId") String paymentId,
-                                     @RequestParam("PayerID") String payerId) {
-        try {
-            Payment payment = paymentService.executePayment(paymentId, payerId);
-            // Redirect to success page
-            return new RedirectView("/payment-success.html?paymentId=" + paymentId);
-        } catch (PayPalRESTException e) {
-            // Redirect to error page
-            return new RedirectView("/payment-error.html?error=" + e.getMessage());
-        }
+public RedirectView executePayment(@RequestParam("paymentId") String paymentId,
+                                   @RequestParam("PayerID") String payerId) {
+    try {
+        paymentService.executePayment(paymentId, payerId); // Cleaned line
+        PaymentEntity entity = paymentService.getLocalPaymentDetails(paymentId);
+        String bookingId = entity.getBookingId();
+
+        return new RedirectView(clientUrl + "/payment/success?paymentId=" + paymentId + "&bookingId=" + bookingId);
+    } catch (PayPalRESTException e) {
+        return new RedirectView(clientUrl + "/payment-error.html?error=" + e.getMessage());
     }
+}
+
 
     @GetMapping("/{paymentId}")
     public ResponseEntity<?> getPaymentDetails(@PathVariable String paymentId) {

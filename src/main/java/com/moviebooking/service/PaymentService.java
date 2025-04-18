@@ -56,6 +56,8 @@ public class PaymentService {
         paymentEntity.setDescription(paymentRequest.getDescription());
         paymentEntity.setStatus("CREATED");
         paymentEntity.setCreatedAt(LocalDateTime.now());
+        paymentEntity.setBookingId(paymentRequest.getBookingId());
+        
         paymentRepository.save(paymentEntity);
 
         return createdPayment;

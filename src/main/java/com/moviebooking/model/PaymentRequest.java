@@ -9,4 +9,5 @@ public class PaymentRequest {
     private Double amount;
     private String returnUrl;
     private String cancelUrl;
+    private String bookingId;
 } 

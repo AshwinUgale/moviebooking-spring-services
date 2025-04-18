@@ -18,4 +18,5 @@ public class PaymentEntity {
     private String description;
     private LocalDateTime createdAt;
     private String payerId;
+    private String bookingId;
 } 

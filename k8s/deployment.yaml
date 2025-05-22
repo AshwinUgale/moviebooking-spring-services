@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: spring-service
-          image: ashwin1121/spring-service:v6
+          image: ashwin1121/spring-service:v2
 
           ports:
             - containerPort: 8080

@@ -18,12 +18,4 @@ spec:
 
           ports:
             - containerPort: 8080
-          env:
-            - name: PAYPAL_CLIENT_ID
-              value: "AVtXpJBD_-Dmv3fxXLQfhka3vacHqXlm_YorCC7usT4pAU9AO42iAHt0hntW5-AuOTRJEZX2uC5pxDzW"
-            - name: PAYPAL_CLIENT_SECRET
-              value: "EJKMHw6aSVPD5tsDZcIvZtPEMhZVJSzPsqBZu9AXHPPvjaF1j60pZeYi1kPQ-GF_YSRM0llJsmtQYLGj"
-            - name: PAYPAL_MODE
-              value: "sandbox"
-            - name: CLIENT_URL
-              value: "http://34.173.217.12" 
+         

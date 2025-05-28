@@ -67,3 +67,8 @@ jobs:
         run: |
           gcloud container clusters get-credentials ${{ secrets.GKE_CLUSTER_NAME }} --zone ${{ secrets.GKE_CLUSTER_ZONE }} --project ${{ secrets.GCP_PROJECT_ID }}
           kubectl set image deployment/spring-service spring-service=${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+          kubectl set env deployment/spring-service \
+            PAYPAL_CLIENT_ID=${{ secrets.PAYPAL_CLIENT_ID }} \
+            PAYPAL_CLIENT_SECRET=${{ secrets.PAYPAL_CLIENT_SECRET }} \
+            PAYPAL_MODE=sandbox \
+            CLIENT_URL=http://34.173.217.12

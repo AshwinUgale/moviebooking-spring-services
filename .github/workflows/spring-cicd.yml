@@ -71,4 +71,4 @@ jobs:
             PAYPAL_CLIENT_ID=${{ secrets.PAYPAL_CLIENT_ID }} \
             PAYPAL_CLIENT_SECRET=${{ secrets.PAYPAL_CLIENT_SECRET }} \
             PAYPAL_MODE=sandbox \
-            CLIENT_URL=http://34.173.217.12
+            CLIENT_URL=http://34.61.7.183
